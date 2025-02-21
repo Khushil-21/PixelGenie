@@ -19,7 +19,23 @@ export default function Sidebar() {
                     <SignedIn>
                         <ul className="sidebar-nav_elements">
                             {
-                                navLinks.map((link) => {
+                                navLinks.slice(0, 6).map((link) => {
+                                    const isActive = pathname === link.route
+
+                                    return (
+                                        <li key={link.route} className={`sidebar-nav_element ${isActive ? 'bg-purple-gradient text-white' : 'text-gray-700'}`}>
+
+                                            <Link href={link.route} className='sidebar-link'>
+                                                <Image src={link.icon} alt={link.label} className={`${isActive && 'brightness-200'}`} width={24} height={24} />
+                                                {link.label}
+                                            </Link>
+                                        </li>
+                                    )
+                                })}
+                        </ul>
+                        <ul className='sidebar-nav_elements'>
+                            {
+                                navLinks.slice(6).map((link) => {
                                     const isActive = pathname === link.route
 
                                     return (
