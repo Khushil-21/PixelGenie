@@ -69,20 +69,27 @@ export async function POST(req: Request) {
             lastName: last_name || "",
             photo: image_url || "",
         };
+        console.log("user", user);
 
         const newUser = await createUser(user);
+        console.log("newUser: ", newUser);
 
-        // Set public metadata
-        if (newUser) {
-            const clerk = await clerkClient();
-            await clerk.users.updateUserMetadata(id, {
-                publicMetadata: {
-                    userId: newUser._id,
-                },
-            });
+        try {
+            // Set public metadata
+            if (newUser) {
+                const clerk = await clerkClient();
+                await clerk.users.updateUserMetadata(id, {
+                    publicMetadata: {
+                        userId: newUser._id,
+                    },
+                });
+                return NextResponse.json({ message: "OK", user: newUser });
+            }
+        } catch (error) {
+            console.log("Error setting public metadata:", error);
+            return NextResponse.json({ message: "Error setting public metadata", error: error }, { status: 500 });
         }
 
-        return NextResponse.json({ message: "OK", user: newUser });
     }
 
     // UPDATE
@@ -114,4 +121,8 @@ export async function POST(req: Request) {
     console.log("Webhook body:", body);
 
     return new Response("", { status: 200 });
+}
+
+export async function GET() {
+    return Response.json({ message: 'Hello World' })
 }
