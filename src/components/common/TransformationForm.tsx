@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import { object, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,6 +43,11 @@ export default function TransformationForm({
 	userId,
 	creditBalance,
 }: TransformationFormProps) {
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isTransforming, setIsTransforming] = useState(false);
+	const [newTransformation, setNewTransformation] =
+		useState<Transformations | null>(null);
+
 	const initialValues =
 		data && action === "Update"
 			? {
@@ -83,6 +88,11 @@ export default function TransformationForm({
 	) {
 		console.log(fieldName, value, type);
 		onChange(value);
+	}
+
+	function onTransformHandler() {
+		setIsSubmitting(true);
+		setIsTransforming(true);
 	}
 
 	return (
@@ -145,10 +155,49 @@ export default function TransformationForm({
 								/>
 							)}
 						/>
+
+						{type === "recolor" && (
+							<CustomField
+								control={form.control}
+								name="color"
+								formLabel="Replacement Color"
+								className="w-full"
+								render={({ field }) => (
+									<Input
+										value={field.value}
+										className="input-field"
+										onChange={(e) =>
+											onInputChangeHandler(
+												"color",
+												e.target.value,
+												"recolor",
+												field.onChange
+											)
+										}
+									/>
+								)}
+							/>
+						)}
 					</div>
-                )}
-                
-                
+				)}
+
+				<div className="flex flex-col gap-4">
+					<Button
+						type="button"
+						className="submit-button capitalize"
+						disabled={isTransforming || newTransformation === null}
+						onClick={onTransformHandler}
+					>
+						{isTransforming ? "Transforming..." : "Apply Transformation"}
+					</Button>
+					<Button
+						type="submit"
+						className="submit-button capitalize"
+						disabled={isSubmitting}
+					>
+						{isSubmitting ? "Submitting..." : "Save Image"}
+					</Button>
+				</div>
 			</form>
 		</Form>
 	);
