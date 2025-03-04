@@ -15,7 +15,7 @@ export default async function AddTransformationPage({ params }: { params: Promis
 
     const { title, subTitle } = transformationTypes[type as keyof typeof transformationTypes];
     return (
-        <div>
+        <>
             <Header
                 title={title}
                 subtitle={subTitle}
@@ -26,6 +26,6 @@ export default async function AddTransformationPage({ params }: { params: Promis
                 type={type as TransformationTypeKey}
                 creditBalance={user?.creditBalance}
             />
-        </div>
+        </>
     )
 }
