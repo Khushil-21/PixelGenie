@@ -34,6 +34,7 @@ import { CustomField } from "./CustomField";
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 import MediaUploader from "./MediaUploader";
 import TransformedImage from "./TransformedImage";
+import { updateCredits } from "@/lib/Database/actions/user.action";
 
 export const formSchema = z.object({
 	title: z.string(),
@@ -123,18 +124,17 @@ export default function TransformationForm({
 
 	async function onTransformHandler() {
 		setIsTransforming(true);
-		
+
 		setTransformationConfig(
 			deepMergeObjects(transformationConfig, newTransformation)
-		)
+		);
 
-		setNewTransformation(null)
+		setNewTransformation(null);
 
 		startTransition(async () => {
 			// TODO: Implement the transformation logic
-			// await updateCreditBalance(userId, creditBalance - 1);
-		})
-		
+			await updateCredits(userId, 1);
+		});
 	}
 
 	return (
