@@ -35,6 +35,7 @@ export default function MediaUploader({
 			description: "1 Credit was deducted from your account",
 			duration: 5000,
 			className: "success-toast",
+			position: "top-center",
 		});
 	}
 	function onUploadErrorHandler(error: any) {
@@ -43,6 +44,7 @@ export default function MediaUploader({
 			description: "Try again",
 			duration: 5000,
 			className: "error-toast",
+			position: "top-center",
 		});
 	}
 	return (
