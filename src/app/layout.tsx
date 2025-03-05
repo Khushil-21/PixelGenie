@@ -3,6 +3,7 @@ import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
 
 const IBM_PLEX = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={cn(IBM_PLEX.variable, "font-ibm-plex antialiased")}>
           {children}
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
