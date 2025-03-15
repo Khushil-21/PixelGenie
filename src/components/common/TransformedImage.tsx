@@ -1,3 +1,5 @@
+"use client";
+
 import { dataUrl, debounce, getImageSize } from "@/lib/utils";
 import { CldImage } from "next-cloudinary";
 

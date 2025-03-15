@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Header({ title, subtitle }: { title: string, subtitle: string }) {
+export default function Header({ title, subtitle }: { title: string, subtitle?: string }) {
     return (
         <>
             <h1 className="h2-bold text-dark-600">{title}</h1>
