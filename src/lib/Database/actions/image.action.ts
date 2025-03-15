@@ -125,12 +125,12 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
     console.log("resourceIds: ", resourceIds);
 
     let query = {};
-    
     if (searchQuery) {
       query = {
-        publicId: {
-          $in: resourceIds
-        }
+        $or: [
+          { publicId: { $in: resourceIds } },
+          { title: { $regex: searchQuery, $options: 'i' } }
+        ]
       }
     }
     console.log("query: ", query);
