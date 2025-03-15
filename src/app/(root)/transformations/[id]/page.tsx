@@ -13,8 +13,9 @@ import TransformedImage from "@/components/common/TransformedImage";
 import { DeleteConfirmation } from "@/components/common/DeleteConfirmation";
 
 
-const ImageDetails = async ({ params: { id } }: SearchParamProps) => {
+const ImageDetails = async ({ params }: SearchParamProps) => {
   const { userId } = await auth();
+  const { id } = await params;
 
   const image = await getImageById(id);
 
