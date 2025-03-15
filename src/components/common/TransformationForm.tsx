@@ -175,7 +175,7 @@ export default function TransformationForm({
 					[fieldName === "prompt" ? "prompt" : "to"]: value,
 				},
 			}));
-		}, 1000);
+		}, 1000)();
 
 		return onChange(value);
 	}
