@@ -109,7 +109,7 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
       api_secret: process.env.CLOUDINARY_API_SECRET,
       secure: true,
     })
-    
+
     let expression = 'folder=PixelGenie';
 
     if (searchQuery) {
@@ -117,12 +117,12 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
     }
 
     const { resources } = await cloudinary.search
-    .expression(expression)
-    .execute();
-    console.log("resources: ", resources);
-    
+      .expression(expression)
+      .execute();
+
+
     const resourceIds = resources.map((resource: any) => resource.public_id);
-    console.log("resourceIds: ", resourceIds);
+
 
     let query = {};
     if (searchQuery) {
@@ -138,17 +138,17 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
     const skipAmount = (Number(page) - 1) * limit;
 
     const images = await populateUser(Image.find(query))
-    .sort({ updatedAt: -1 })
-    .skip(skipAmount)
-    .limit(limit);
-    
-    console.log("images: ", images);
+      .sort({ updatedAt: -1 })
+      .skip(skipAmount)
+      .limit(limit);
+
+
 
     const totalImages = await Image.find(query).countDocuments();
-    console.log("totalImages: ", totalImages);
+
 
     const savedImages = await Image.find().countDocuments();
-    console.log("savedImages: ", savedImages);
+
 
     return {
       data: JSON.parse(JSON.stringify(images)),
