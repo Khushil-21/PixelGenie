@@ -191,7 +191,7 @@ export default function TransformationForm({
 
 		startTransition(async () => {
 			// TODO: Implement the transformation logic
-			await updateCredits(userId, 1);
+			await updateCredits(userId, creditFee , "subtraction");
 		});
 	}
 

@@ -48,7 +48,7 @@ export async function createTransaction(transaction: CreateTransactionParams) {
       ...transaction, buyer: transaction.buyerId
     })
 
-    await updateCredits(transaction.buyerId, transaction.credits);
+    await updateCredits(transaction.buyerId, transaction.credits , "addition");
 
     return JSON.parse(JSON.stringify(newTransaction));
   } catch (error) {
