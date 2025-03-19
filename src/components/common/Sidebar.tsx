@@ -13,7 +13,7 @@ export default function Sidebar() {
         <aside className='sidebar'>
             <div className='flex flex-col size-full gap-4'>
                 <Link href='/' className='flex items-center gap-2'>
-                    <Image src='/assets/images/logo-text.svg' alt='logo' width={180} height={28} />
+                    <Image src='/assets/images/logo.png' alt='logo' width={230} height={28} />
                 </Link>
                 <nav className='sidebar-nav'>
                     <SignedIn>
