@@ -34,7 +34,7 @@ const UserProfile = async ({ params, searchParams }: UserProfileParams) => {
 
   return (
     <>
-      <Header title={`${user.firstName} ${user.lastName}'s Profile`} />
+      {/* <Header title={`${user.firstName} ${user.lastName}'s Profile`} /> */}
 
       <section className="profile">
         <div className="flex items-center gap-4 mb-8">
@@ -62,7 +62,7 @@ const UserProfile = async ({ params, searchParams }: UserProfileParams) => {
       </section>
 
       <section className="sm:mt-12">
-        <h3 className="h3-bold text-dark-600 mb-4">Public Creations</h3>
+        {/* <h3 className="h3-bold text-dark-600 mb-4">Public Creations</h3> */}
         <Collection
           images={images?.data || []}
           totalPages={images?.totalPages || 0}
