@@ -31,6 +31,7 @@ import { getCldImageUrl } from "next-cloudinary";
 import { addImage, updateImage } from "@/lib/Database/actions/image.action";
 import { useRouter } from "next/navigation";
 import { InsufficientCreditsModal } from "./InsufficientCreditsModal";
+import { GlobeIcon, LockIcon } from "lucide-react";
 
 export const formSchema = z.object({
 	title: z.string(),
@@ -231,16 +232,22 @@ export default function TransformationForm({
 						className="w-full"
 						render={({ field }) => (
 							<div className="flex gap-3">
-								{[{ label: "Public", value: true }, { label: "Private", value: false }].map((option) => (
+								{[
+									{ label: "Public", value: true, icon: GlobeIcon },
+									{ label: "Private", value: false, icon: LockIcon }
+								].map((option) => (
 									<div
 										key={option.label}
-										className={`rounded-[8px] w-1/2 py-2 ring-1 ring-purple-400 cursor-pointer flex justify-center items-center ${
+										className={`rounded-full w-1/2 py-2 px-3 ring-1 cursor-pointer flex justify-center items-center gap-2 transition-all ${
 											field.value === option.value
-												? "bg-[#F6F5FF] ring-2 text-purple-500"
-												: "bg-white text-dark-600"
+												? "bg-purple-gradient text-white font-semibold ring-purple-500"
+												: "bg-white text-gray-700 ring-gray-200 hover:ring-purple-300"
 										}`}
 										onClick={() => field.onChange(option.value)}
 									>
+										<option.icon 
+											className="w-4 h-4" 
+										/>
 										{option.label}
 									</div>
 								))}
