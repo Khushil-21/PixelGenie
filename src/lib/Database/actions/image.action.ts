@@ -124,14 +124,19 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
     const resourceIds = resources.map((resource: any) => resource.public_id);
 
 
-    let query = {};
+    let query = {
+      isPublic: true
+    };
+    
     if (searchQuery) {
       query = {
-        $or: [
-          { publicId: { $in: resourceIds } },
-          { title: { $regex: searchQuery, $options: 'i' } }
-        ]
-      }
+        isPublic: true,
+      } as any;
+      
+      (query as any).$or = [
+        { publicId: { $in: resourceIds } },
+        { title: { $regex: searchQuery, $options: 'i' } }
+      ];
     }
     console.log("query: ", query);
 
@@ -160,15 +165,12 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
   }
 }
 
-// GET IMAGES BY USER
-export async function getUserImages({
-  limit = 9,
-  page = 1,
-  userId,
-}: {
+// GET USER IMAGES
+export async function getUserImages({ limit = 9, page = 1, userId }: {
   limit?: number;
   page: number;
   userId: string;
+  visibility?: string;
 }) {
   try {
     await connectToDatabase();
@@ -186,6 +188,70 @@ export async function getUserImages({
       data: JSON.parse(JSON.stringify(images)),
       totalPages: Math.ceil(totalImages / limit),
     };
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+// GET USER IMAGES WITH FILTER
+export async function getUserImagesWithFilter({ limit = 9, page = 1, userId, visibility = 'all' }: {
+  limit?: number;
+  page: number;
+  userId: string;
+  visibility?: string;
+}) {
+  try {
+    await connectToDatabase();
+
+    const skipAmount = (Number(page) - 1) * limit;
+    
+    let query = { author: userId };
+    
+    if (visibility === 'public') {
+      query = { author: userId, isPublic: true } as any;
+    } else if (visibility === 'private') {
+      query = { author: userId, isPublic: false } as any;
+    }
+
+    const images = await populateUser(Image.find(query))
+      .sort({ updatedAt: -1 })
+      .skip(skipAmount)
+      .limit(limit);
+
+    const totalImages = await Image.find(query).countDocuments();
+
+    return {
+      data: JSON.parse(JSON.stringify(images)),
+      totalPages: Math.ceil(totalImages / limit),
+    };
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+// TOGGLE IMAGE VISIBILITY
+export async function toggleImageVisibility(imageId: string, userId: string) {
+  try {
+    await connectToDatabase();
+
+    const image = await Image.findById(imageId);
+    
+    if (!image || image.author.toString() !== userId) {
+      throw new Error("Unauthorized or image not found");
+    }
+    
+    // Toggle the isPublic status
+    const updatedImage = await Image.findByIdAndUpdate(
+      imageId,
+      { isPublic: !image.isPublic },
+      { new: true }
+    );
+    
+    revalidatePath('/');
+    revalidatePath(`/transformations/${imageId}`);
+    revalidatePath('/profile');
+    
+    return JSON.parse(JSON.stringify(updatedImage));
   } catch (error) {
     handleError(error);
   }

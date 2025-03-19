@@ -2,21 +2,26 @@ import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
-
 import Header from "@/components/common/Header";
-import { getUserImages } from "@/lib/Database/actions/image.action";
+import { getUserImagesWithFilter } from "@/lib/Database/actions/image.action";
 import { getUserById } from "@/lib/Database/actions/user.action";
 import { Collection } from "@/components/common/Collection";
+import VisibilityFilter from "@/components/common/VisibilityFilter";
 
 const Profile = async ({ searchParams }: SearchParamProps) => {
   const paramsData = await searchParams;
   const page = Number(paramsData?.page) || 1;
+  const visibility = (paramsData?.visibility as string) || 'all';
   const { userId } = await auth();
 
   if (!userId) redirect("/sign-in");
 
   const user = await getUserById(userId);
-  const images = await getUserImages({ page, userId: user._id });
+  const images = await getUserImagesWithFilter({ 
+    page, 
+    userId: user._id,
+    visibility
+  });
 
   return (
     <>
@@ -52,7 +57,8 @@ const Profile = async ({ searchParams }: SearchParamProps) => {
         </div>
       </section>
 
-      <section className="mt-8 md:mt-14">
+      <section className="sm:mt-12">
+        <VisibilityFilter currentVisibility={visibility} />
         <Collection
           images={images?.data}
           totalPages={images?.totalPages}

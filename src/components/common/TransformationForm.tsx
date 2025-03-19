@@ -2,7 +2,7 @@
 "use client";
 import React, { useEffect, useState, useTransition } from "react";
 
-import { object, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import {
 	aspectRatioOptions,
 	creditFee,
-	defaultValues,
 	transformationTypes,
 } from "@/constants";
 import { CustomField } from "./CustomField";
@@ -39,6 +38,7 @@ export const formSchema = z.object({
 	color: z.string().optional(),
 	prompt: z.string().optional(),
 	publicId: z.string(),
+	isPublic: z.boolean().default(true),
 });
 
 export default function TransformationForm({
@@ -56,7 +56,7 @@ export default function TransformationForm({
 	const [newTransformation, setNewTransformation] =
 		useState<Transformations | null>(null);
 	const [transformationConfig, setTransformationConfig] = useState(config);
-	const [isPending, startTransition] = useTransition();
+	const [, startTransition] = useTransition();
 	const router = useRouter();
 
 	const initialValues =
@@ -67,8 +67,16 @@ export default function TransformationForm({
 					color: data?.color,
 					prompt: data?.prompt,
 					publicId: data?.publicId,
+					isPublic: data?.isPublic ?? true,
 			  }
-			: defaultValues;
+			: {
+					title: "",
+					aspectRatio: "",
+					color: "",
+					prompt: "",
+					publicId: "",
+					isPublic: true,
+			  };
 
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -100,6 +108,7 @@ export default function TransformationForm({
 				aspectRatio: values.aspectRatio,
 				prompt: values.prompt,
 				color: values.color,
+				isPublic: values.isPublic,
 			};
 
 			if (action === "Add") {
@@ -191,15 +200,15 @@ export default function TransformationForm({
 
 		startTransition(async () => {
 			// TODO: Implement the transformation logic
-			await updateCredits(userId, creditFee , "subtraction");
+			await updateCredits(userId, creditFee, "subtraction");
 		});
 	}
 
 	useEffect(() => {
-		if(image && (type === "restore" || type === "removeBackground")) {
+		if (image && (type === "restore" || type === "removeBackground")) {
 			setNewTransformation(transformationType.config);
 		}
-	}, [image,transformationType.config,type]);
+	}, [image, transformationType.config, type]);
 
 	return (
 		<Form {...form}>
@@ -212,6 +221,33 @@ export default function TransformationForm({
 					className="w-full"
 					render={({ field }) => <Input {...field} className="input-field" />}
 				/>
+
+				<div className="mt-6 mb-4">
+					{/* <h3 className="p-16-medium text-dark-600 mb-2">Image Visibility</h3> */}
+					<CustomField
+						formLabel="Image Visibility"
+						control={form.control}
+						name="isPublic"
+						className="w-full"
+						render={({ field }) => (
+							<div className="flex gap-3">
+								{[{ label: "Public", value: true }, { label: "Private", value: false }].map((option) => (
+									<div
+										key={option.label}
+										className={`rounded-[8px] w-1/2 py-2 ring-1 ring-purple-400 cursor-pointer flex justify-center items-center ${
+											field.value === option.value
+												? "bg-[#F6F5FF] ring-2 text-purple-500"
+												: "bg-white text-dark-600"
+										}`}
+										onClick={() => field.onChange(option.value)}
+									>
+										{option.label}
+									</div>
+								))}
+							</div>
+						)}
+					/>
+				</div>
 
 				{type === "fill" && (
 					<CustomField

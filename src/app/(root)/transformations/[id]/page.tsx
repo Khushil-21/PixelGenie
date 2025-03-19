@@ -1,7 +1,5 @@
-
 import Image from "next/image";
 import Link from "next/link";
-
 
 import { Button } from "@/components/ui/button";
 
@@ -11,6 +9,8 @@ import { getImageById } from "@/lib/Database/actions/image.action";
 import Header from "@/components/common/Header";
 import TransformedImage from "@/components/common/TransformedImage";
 import { DeleteConfirmation } from "@/components/common/DeleteConfirmation";
+import VisibilityToggle from "@/components/common/VisibilityToggle";
+import { getUserById } from "@/lib/Database/actions/user.action";
 
 
 const ImageDetails = async ({ params }: SearchParamProps) => {
@@ -18,6 +18,8 @@ const ImageDetails = async ({ params }: SearchParamProps) => {
   const { id } = await params;
 
   const image = await getImageById(id);
+  const user = userId ? await getUserById(userId) : null;
+  const isOwner = user && image.author._id.toString() === user._id.toString();
 
   return (
     <>
@@ -57,6 +59,20 @@ const ImageDetails = async ({ params }: SearchParamProps) => {
             <div className="p-14-medium md:p-16-medium flex gap-2">
               <p className="text-dark-600">Aspect Ratio:</p>
               <p className=" capitalize text-purple-400">{image.aspectRatio}</p>
+            </div>
+          </>
+        )}
+
+        {isOwner && (
+          <>
+            <p className="hidden text-dark-400/50 md:block">&#x25CF;</p>
+            <div className="p-14-medium md:p-16-medium flex gap-2">
+              <p className="text-dark-600">Visibility:</p>
+              <VisibilityToggle 
+                imageId={image._id}
+                userId={user._id}
+                isPublic={image.isPublic}
+              />
             </div>
           </>
         )}
