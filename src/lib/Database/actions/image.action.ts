@@ -14,7 +14,7 @@ import { handleError } from "@/lib/utils";
 const populateUser = (query: any) => query.populate({
   path: 'author',
   model: User,
-  select: '_id firstName lastName clerkId'
+  select: '_id firstName lastName clerkId photo'
 })
 
 // ADD IMAGE
@@ -252,6 +252,33 @@ export async function toggleImageVisibility(imageId: string, userId: string) {
     revalidatePath('/profile');
     
     return JSON.parse(JSON.stringify(updatedImage));
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+// GET USER PUBLIC IMAGES
+export async function getUserPublicImages({ limit = 9, page = 1, userId }: {
+  limit?: number;
+  page: number;
+  userId: string;
+}) {
+  try {
+    await connectToDatabase();
+
+    const skipAmount = (Number(page) - 1) * limit;
+
+    const images = await populateUser(Image.find({ author: userId, isPublic: true }))
+      .sort({ updatedAt: -1 })
+      .skip(skipAmount)
+      .limit(limit);
+
+    const totalImages = await Image.find({ author: userId, isPublic: true }).countDocuments();
+
+    return {
+      data: JSON.parse(JSON.stringify(images)),
+      totalPages: Math.ceil(totalImages / limit),
+    };
   } catch (error) {
     handleError(error);
   }

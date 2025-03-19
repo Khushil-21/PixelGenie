@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
 			{
 				hostname: "res.cloudinary.com",
 			},
+			{
+				hostname: "img.clerk.com",
+			},
 		],
 	},
 };

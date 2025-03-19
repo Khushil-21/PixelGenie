@@ -76,6 +76,34 @@ const ImageDetails = async ({ params }: SearchParamProps) => {
             </div>
           </>
         )}
+
+        <>
+          <p className="hidden text-dark-400/50 md:block">&#x25CF;</p>
+          <div className="p-14-medium md:p-16-medium flex gap-2">
+            <p className="text-dark-600">Creator:</p>
+            <Link href={`/profile/${image.author._id}`} className="flex items-center gap-2">
+              {image.author.photo ? (
+                <Image 
+                  src={image.author.photo}
+                  alt={`${image.author.firstName} ${image.author.lastName}`}
+                  width={24}
+                  height={24}
+                  className="rounded-full"
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-gray-300 flex-center">
+                  <p className="text-xs text-gray-600">
+                    {image.author.firstName?.[0] || ''}
+                    {image.author.lastName?.[0] || ''}
+                  </p>
+                </div>
+              )}
+              <p className="text-purple-400">
+                {image.author.firstName} {image.author.lastName}
+              </p>
+            </Link>
+          </div>
+        </>
       </section>
 
       <section className="mt-10 border-t border-dark-400/15">

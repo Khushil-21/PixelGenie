@@ -122,6 +122,31 @@ const Card = ({ image }: { image: ImageType }) => {
 						height={24}
 					/>
 				</div>
+				<div className="flex items-center mt-2 gap-2">
+					{image.author && (
+						<Link href={`/profile/${image.author._id}`} className="flex items-center gap-2">
+							{image.author.photo ? (
+								<Image 
+									src={image.author.photo}
+									alt={`${image.author.firstName} ${image.author.lastName}`}
+									width={24}
+									height={24}
+									className="rounded-full"
+								/>
+							) : (
+								<div className="w-6 h-6 rounded-full bg-gray-300 flex-center">
+									<p className="text-xs text-gray-600">
+										{image.author.firstName?.[0] || ''}
+										{image.author.lastName?.[0] || ''}
+									</p>
+								</div>
+							)}
+							<p className="text-xs text-gray-600">
+								{image.author.firstName} {image.author.lastName}
+							</p>
+						</Link>
+					)}
+				</div>
 			</Link>
 		</li>
 	);

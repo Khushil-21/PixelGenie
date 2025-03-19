@@ -34,6 +34,21 @@ export async function getUserById(userId: string) {
   }
 }
 
+// Get user by MongoDB ID
+export async function getUserByMongoId(id: string) {
+  try {
+    await connectToDatabase();
+
+    const user = await User.findById(id);
+
+    if (!user) throw new Error("User not found");
+
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    handleError(error);
+  }
+}
+
 // UPDATE
 export async function updateUser(clerkId: string, user: UpdateUserParams) {
   try {
