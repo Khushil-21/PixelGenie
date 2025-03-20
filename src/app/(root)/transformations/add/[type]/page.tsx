@@ -6,6 +6,12 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import React from "react";
 
+export async function generateStaticParams() {
+	return Object.keys(transformationTypes).map((type) => ({
+		type,
+	}));
+}
+
 export default async function AddTransformationPage({
 	params,
 }: {
