@@ -152,3 +152,12 @@ declare type UserType = {
   creditBalance: number;
 };
 
+declare type TransactionType = {
+  _id: string;
+  createdAt: Date;
+  stripeId: string;
+  amount: number;
+  plan: string;
+  credits: number;
+  buyer: string | UserType;
+};

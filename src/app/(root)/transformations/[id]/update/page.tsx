@@ -5,7 +5,15 @@ import { getUserById } from "@/lib/Database/actions/user.action";
 import { getImageById } from "@/lib/Database/actions/image.action";
 import TransformationForm from "@/components/common/TransformationForm";
 import Header from "@/components/common/Header";
+import { getAllTransactions } from "@/lib/Database/actions/transaction.action";
 
+export async function generateStaticParams() {
+  const transactions = await getAllTransactions();
+
+  return transactions.map((transaction: TransactionType) => ({
+    id: transaction._id,
+  }));
+}
 
 const Page = async ({ params }: SearchParamProps) => {
     const { userId } = await auth();

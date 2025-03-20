@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
-
 import { getImageSize } from "@/lib/utils";
 import { auth } from "@clerk/nextjs/server";
 import { getImageById } from "@/lib/Database/actions/image.action";
@@ -11,6 +9,15 @@ import TransformedImage from "@/components/common/TransformedImage";
 import { DeleteConfirmation } from "@/components/common/DeleteConfirmation";
 import VisibilityToggle from "@/components/common/VisibilityToggle";
 import { getUserById } from "@/lib/Database/actions/user.action";
+import { getAllTransactions } from "@/lib/Database/actions/transaction.action";
+
+export async function generateStaticParams() {
+  const transactions = await getAllTransactions();
+
+  return transactions.map((transaction: TransactionType) => ({
+    id: transaction._id,
+  }));
+}
 
 
 const ImageDetails = async ({ params }: SearchParamProps) => {

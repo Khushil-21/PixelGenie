@@ -56,3 +56,15 @@ export async function createTransaction(transaction: CreateTransactionParams) {
     handleError(error)
   }
 }
+
+export async function getAllTransactions() {
+  try {
+    await connectToDatabase();
+
+    const transactions = await Transaction.find();
+
+    return JSON.parse(JSON.stringify(transactions));
+  } catch (error) {
+    handleError(error);
+  }
+}
