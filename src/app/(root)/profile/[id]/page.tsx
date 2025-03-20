@@ -1,8 +1,6 @@
 import Image from "next/image";
-
-import Header from "@/components/common/Header";
 import { getUserPublicImages } from "@/lib/Database/actions/image.action";
-import { getUserByMongoId } from "@/lib/Database/actions/user.action";
+import { getAllUsers, getUserByMongoId } from "@/lib/Database/actions/user.action";
 import { Collection } from "@/components/common/Collection";
 
 interface UserProfileParams {
@@ -12,6 +10,14 @@ interface UserProfileParams {
   searchParams: {
     page?: string;
   };
+}
+
+export async function generateStaticParams() {
+  const users = await getAllUsers();
+ 
+  return users.map((user: UserType) => ({
+    id: user._id,
+  }));
 }
 
 const UserProfile = async ({ params, searchParams }: UserProfileParams) => {

@@ -137,4 +137,18 @@ declare type CreateUserParams = {
     isTransforming: boolean;
     hasDownload?: boolean;
     setIsTransforming?: React.Dispatch<React.SetStateAction<boolean>>;
-  };
+};
+  
+
+declare type UserType = {
+  _id: string;
+  clerkId: string;
+  email: string;
+  username: string;
+  photo: string;
+  firstName?: string;
+  lastName?: string;
+  planId: number;
+  creditBalance: number;
+};
+
